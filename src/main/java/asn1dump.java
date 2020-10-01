@@ -2,11 +2,13 @@ import org.bouncycastle.asn1.*;
 import org.bouncycastle.util.encoders.Hex;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 
 public class asn1dump {
 
-    static String dumpAsString(String inpvar, DERObject derobj,String tagno) {
+    static String dumpAsString(String inpvar, DERObject derobj,String tagno,String value,asntag asntag) {
         //String seprator = System.getProperty("line.separator");
         String seprator = "";
         StringBuffer stringbfr;
@@ -23,23 +25,26 @@ public class asn1dump {
                 //stringbfr.append("(");
                 DERTaggedObject derobj2 = (DERTaggedObject)derobj;
                 lasttagno = tagno + "" + (Integer.toString(derobj2.getTagNo()));
-                //stringbfr.append(lasttagno);
+                //stringbfr.append("("+lasttagno+")");
                 //stringbfr.append(")");
-                stringbfr.append(",");
+                //stringbfr.append(",");
                 stringbfr.append(seprator);
                 if (derobj2.isEmpty()) {
                     //stringbfr.append(")");
-                    stringbfr.append(",");
+                    //stringbfr.append(",");
                 } else {
-                    stringbfr.append(dumpAsString(inpvar, derobj2.getObject(),lasttagno));
+                    stringbfr.append(dumpAsString(inpvar, derobj2.getObject(),lasttagno,"",asntag));
                 }
                 return stringbfr.toString();
             } else {
                 ASN1OctetString var9;
-                if (derobj instanceof DEROctetString) {
-                    var9 = (ASN1OctetString)derobj;
-                    return inpvar + dumpBinaryDataAsString(inpvar, var9.getOctets()) + seprator ;
+                if(asntag.checker(lasttagno)) {
+                    if (derobj instanceof DEROctetString) {
+                        var9 = (ASN1OctetString) derobj;
+                        //return inpvar + dumpBinaryDataAsString(inpvar, var9.getOctets()) + seprator;
+                        return inpvar +dumpBinaryDataAsString(inpvar, var9.getOctets()) + "/";
 
+                    }
                 }
             }
         } else {
@@ -54,11 +59,13 @@ public class asn1dump {
                 while(seqEnum.hasMoreElements()) {
                     obj1 = seqEnum.nextElement();
                     if (obj1 != null && !obj1.equals(new DERNull())) {
-                        if (obj1 instanceof DERObject) {
-                            stringbfr.append(dumpAsString(strvar1,  (DERObject)obj1,lasttagno));
-                        } else {
-                            stringbfr.append(dumpAsString(strvar1, ((DEREncodable)obj1).getDERObject(),lasttagno));
-                        }
+
+                            if (obj1 instanceof DERObject) {
+                                stringbfr.append(dumpAsString(strvar1,  (DERObject)obj1,lasttagno,"",asntag));
+                            } else {
+                                stringbfr.append(dumpAsString(strvar1, ((DEREncodable)obj1).getDERObject(),lasttagno,"",asntag));
+                            }
+
                     } else {
                         stringbfr.append(strvar1);
                         stringbfr.append("NULL");
@@ -81,6 +88,7 @@ public class asn1dump {
                 var3.append(var0);
                 //var3.append(new String(Hex.encode(var1, var4, var1.length - var4)));
                 var3.append(calculateAscString(var1, var4, var1.length - var4));
+
             }
         }
         return var3.toString();

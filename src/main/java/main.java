@@ -17,10 +17,11 @@ inp = [3]4,5,2,7,3.1,3.2
              ASN1InputStream ais = new ASN1InputStream(
                     new FileInputStream(new File("/Users/khashayarnorouzi/IdeaProjects/asn1nifiprocessor/coded.dat")));
 
+             asntag asntag = new asntag();
             //while (ais.available() > 0) {
             for (int i=0;i<3;i++){
                 DERObject obj = ais.readObject();
-                System.out.println(asn1dump.dumpAsString("",obj,""));
+                System.out.println(asn1dump.dumpAsString("",obj,"","",asntag));
 
             }
             ais.close();
