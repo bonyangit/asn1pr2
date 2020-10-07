@@ -4,8 +4,7 @@ import javax.xml.bind.DatatypeConverter;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class AsnTags {
     List<String> tags;
@@ -170,13 +169,13 @@ public class AsnTags {
         return output.toString();
     }
 
-    static List<String> listCombiner(List<String> seq, List<String> oth) {
+    static List<String> listCombiner(HashMap<String, String> seq, HashMap<String, String> oth) {
         List<String> out = new ArrayList<String>();
         if (seq.size() == 0) {
             StringBuffer mybfer = new StringBuffer();
 
             for (int j = 0; j < oth.size(); j++) {
-                mybfer.append(oth.get(j));
+                //mybfer.append(oth.);
                 mybfer.append(",");
             }
             out.add(mybfer.toString());
@@ -184,7 +183,20 @@ public class AsnTags {
             for (int i = 0; i < seq.size(); i++) {
                 StringBuffer mybfer = new StringBuffer();
 
+
+                Map<String, String> treeMap = new TreeMap<String, String>(oth);
+                for (String str : treeMap.keySet()) {
+                    System.out.println(str);
+                }
+                Iterator hmIterator = oth.entrySet().iterator();
+                while (hmIterator.hasNext()) {
+                    Map.Entry mapElement = (Map.Entry) hmIterator.next();
+                    String marks = (String) mapElement.getValue();
+                    System.out.println(mapElement.getKey() + " : " + marks);
+                }
+
                 for (int j = 0; j < oth.size(); j++) {
+
                     mybfer.append(oth.get(j));
                     mybfer.append(",");
                 }
@@ -196,5 +208,65 @@ public class AsnTags {
         return out;
     }
 
+    public HashMap<String, String> templateBuilder() {
+        HashMap<String, String> map = new HashMap<>();
 
+        map.put(servedIMSI, " ");
+        map.put(IPBinV4Address, " ");
+        map.put(dataVolumeGPRSUplink, " ");
+        map.put(dataVolumeGPRSDownlink, " ");
+        map.put(recordOpeningTime, " ");
+        map.put(duration, " ");
+        map.put(causeForRecClosing, " ");
+        map.put(nodeID, " ");
+        //map.put(url," ");
+        map.put(serviceCode, " ");
+        map.put(localSequenceNumber, " ");
+        map.put(servedMSISDN, " ");
+        map.put(servedIMEISV, " ");
+        map.put(downlinkVolume, " ");
+        map.put(uplinkVolume, " ");
+        map.put(chargingRuleBaseName, " ");
+        map.put(ratingGroup, " ");
+
+        return map;
+
+    }
+
+    public String builder(HashMap<String, String> output, List<String> seq) {
+        StringBuilder strb = new StringBuilder("");
+        HashMap<String, String> template = templateBuilder();
+        int m = 0;
+        if (seq.size() == 0) {
+            for (String str : output.keySet()) {
+                if (template.get(str) != null) {
+                    template.replace(str, output.get(str));
+                }
+            }
+
+            Map<String, String> treeMap = new TreeMap<String, String>(template);
+
+            for (String str : treeMap.keySet()) {
+                strb.append(treeMap.get(str) + ",");
+            }
+            strb.append("\r\n");
+        } else {
+            for (String i : seq) {
+                for (String str : output.keySet()) {
+                    if (template.get(str) != null) {
+                        template.replace(str, output.get(str));
+                    }
+                }
+
+                Map<String, String> treeMap = new TreeMap<String, String>(template);
+                for (String str : treeMap.keySet()) {
+                    strb.append(treeMap.get(str) + ",");
+                }
+
+                strb.append(i + "\r\n");
+            }
+        }
+        return strb.toString();
+
+    }
 }
