@@ -155,7 +155,7 @@ public class AsnTags {
 
     public static String HexToTime(String hex) {
         //char[] charArray = hex.toCharArray();
-        return  "20" + hex.substring(0, 2) + "-" + hex.substring(2, 4) + "-" + hex.substring(4, 6) + " " + hex.substring(6, 8) + ":" + hex.substring(8, 10) + ":" + hex.substring(10, 12)
+        return "20" + hex.substring(0, 2) + "-" + hex.substring(2, 4) + "-" + hex.substring(4, 6) + " " + hex.substring(6, 8) + ":" + hex.substring(8, 10) + ":" + hex.substring(10, 12)
                 + "+" + hex.substring(14, 16) + ":" + hex.substring(16, 18);
     }
 
@@ -172,16 +172,27 @@ public class AsnTags {
 
     static List<String> listCombiner(List<String> seq, List<String> oth) {
         List<String> out = new ArrayList<String>();
-        for (int i = 0; i < seq.size(); i++) {
+        if (seq.size() == 0) {
             StringBuffer mybfer = new StringBuffer();
 
             for (int j = 0; j < oth.size(); j++) {
                 mybfer.append(oth.get(j));
                 mybfer.append(",");
             }
-            mybfer.append(seq.get(i));
             out.add(mybfer.toString());
+        } else {
+            for (int i = 0; i < seq.size(); i++) {
+                StringBuffer mybfer = new StringBuffer();
+
+                for (int j = 0; j < oth.size(); j++) {
+                    mybfer.append(oth.get(j));
+                    mybfer.append(",");
+                }
+                mybfer.append(seq.get(i));
+                out.add(mybfer.toString());
+            }
         }
+
         return out;
     }
 

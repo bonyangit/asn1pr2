@@ -18,30 +18,29 @@ inp = [3]4,5,2,7,3.1,3.2
 */
 
     public static void main(String[] args) {
-        //run(args);
-        test();
-
+        run(args);
+        //test();
     }
 
     public static void run(String[] args){
-        if (args.length < 4
+        /*if (args.length < 4
                 || !(args[0].equals("-i") || args[0].equals("-o"))
                 || !(args[2].equals("-i") || args[2].equals("-o")) || args[0].equals(args[2])) {
             System.out.println(
                     "Example :  \n java -jar app.jar -i inputFilePath -o outputdirectory");
             return;
-        }
+        }*/
 
-        String inFile = "";
-        String outDir = "";
+        String inFile = "/Users/khashayarnorouzi/Desktop/G_GECRHA01_ERHpgwcdr20200915235545000007779_07786658.dat";
+        String outDir = "/Users/khashayarnorouzi/Desktop";
 
-        if (args[0].equals("-i")) {
+        /*if (args[0].equals("-i")) {
             inFile = args[1];
             outDir = args[3];
         } else {
             inFile = args[3];
             outDir = args[1];
-        }
+        }*/
 
         File f = new File(inFile);
         if (!f.exists()) {
@@ -74,9 +73,9 @@ inp = [3]4,5,2,7,3.1,3.2
                 //System.out.println(newlist.size());
                 for (int m = 0; m < newlist.size(); m++) {
                     //System.out.println(newlist.get(m) + ",");
-                    writer.append(newlist.get(m) + ",");
-
+                    writer.append(newlist.get(m) + "\n");
                 }
+
             }
             ais.close();
             writer.close();
